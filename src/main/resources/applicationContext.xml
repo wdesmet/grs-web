@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd">
+	<!-- <context:load-time-weaver /> -->
+	<context:annotation-config />
+	<context:component-scan base-package="net.straininfo2.grs.resource" />
+	<jee:jndi-lookup id="dataSource" jndi-name="jdbc/grsdb" />
+	<bean id="emf"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="persistenceProvider">
+			<bean class="org.hibernate.ejb.HibernatePersistence" />
+		</property>
+	</bean>
+	<bean id="webClient" class="com.sun.jersey.api.client.Client" />
+	<!-- DAO definitions -->
+	<bean id="genomeProjectService" class="net.straininfo2.grs.dao.GenomeProjectService" />
+	<bean id="mappingService" class="net.straininfo2.grs.dao.MappingService" />
+	<bean id ="providerService" class="net.straininfo2.grs.dao.ProviderService" />
+	<bean id="megxGenomeService" class="net.straininfo2.grs.dao.MegxGenomeService">
+		<constructor-arg>
+			<bean class="com.sun.jersey.api.client.WebResource" factory-bean="webClient" factory-method="resource">
+				<constructor-arg value="http://trunk.megx.net/genomes" />
+			</bean>
+		</constructor-arg>
+	</bean>
+</beans>
