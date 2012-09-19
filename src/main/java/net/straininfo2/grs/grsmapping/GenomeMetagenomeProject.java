@@ -31,11 +31,6 @@ public class GenomeMetagenomeProject extends GenomeProject {
 	// release date of metagenome data
 	private Date releaseDate;
 	
-	// creation and update dates in our database
-	private Date createdAt;
-	
-	private Date updatedAt;
-	
 	private Map<String, String> contents;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
@@ -81,24 +76,6 @@ public class GenomeMetagenomeProject extends GenomeProject {
 
 	public void setReleaseDate(Date releaseDate) {
 		this.releaseDate = releaseDate;
-	}
-
-	@Column(name="created_at")
-	public Date getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	@Column(name="updated_at")
-	public Date getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(Date updatedAt) {
-		this.updatedAt = updatedAt;
 	}
 
 	@Override

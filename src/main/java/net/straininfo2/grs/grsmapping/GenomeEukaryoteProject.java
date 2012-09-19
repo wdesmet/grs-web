@@ -43,11 +43,6 @@ public class GenomeEukaryoteProject extends GenomeProject {
 	// release date of sequence data or project data
 	private Date releaseDate;
 	
-	// dates created and updated in our database
-	private Date createdAt;
-	
-	private Date updatedAt;
-	
 	private Map<String, String> contents;
 
 	@Column(name="organism_name")
@@ -139,24 +134,6 @@ public class GenomeEukaryoteProject extends GenomeProject {
 		this.releaseDate = releaseDate;
 	}
 
-	@Column(name="created_at")
-	public Date getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	@Column(name="updated_at")
-	public Date getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(Date updatedAt) {
-		this.updatedAt = updatedAt;
-	}
-	
 	@Override
 	@Transient
 	public Map<String, String> getContents() {
