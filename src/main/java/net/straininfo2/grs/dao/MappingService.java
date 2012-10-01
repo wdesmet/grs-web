@@ -41,7 +41,8 @@ public class MappingService {
 	}
 	
 	/**
-	 * Query mappings through provider and provider id.
+	 * Query mappings through provider and provider id. This
+     * returns all mappings for the associated bioproject.
 	 * 
 	 * @param provider abbreviation of the provider name
 	 * @param id string with provider ID
@@ -51,7 +52,8 @@ public class MappingService {
 	public List<Mapping> mappingsFor(String provider, String id) {
 		return (List<Mapping>)getEntityManager().createQuery(
 				"from Mapping m join fetch m.provider join fetch m.genomeProject " +
-				"where lower(m.provider.abbr)=:provider and m.targetId = :id"
+				"where m.genomeProject = (select i.genomeProject from Mapping i where " +
+                        "lower(i.provider.abbr)=:provider and i.targetId = :id)"
 				).setParameter("provider", provider.toLowerCase()
 						).setParameter("id", id).getResultList();
 	}
