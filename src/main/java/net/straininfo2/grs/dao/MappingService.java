@@ -52,7 +52,7 @@ public class MappingService {
 	public List<Mapping> mappingsFor(String provider, String id) {
 		return (List<Mapping>)getEntityManager().createQuery(
 				"from Mapping m join fetch m.provider join fetch m.genomeProject " +
-				"where m.genomeProject = (select i.genomeProject from Mapping i where " +
+				"where m.genomeProject in (select i.genomeProject from Mapping i where " +
                         "lower(i.provider.abbr)=:provider and i.targetId = :id)"
 				).setParameter("provider", provider.toLowerCase()
 						).setParameter("id", id).getResultList();
