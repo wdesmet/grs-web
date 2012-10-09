@@ -1,24 +1,18 @@
 package net.straininfo2.grs.resource;
 
-import java.util.Formatter;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
+import net.straininfo2.grs.bioproject.mappings.Provider;
 import net.straininfo2.grs.dao.ProviderService;
 import net.straininfo2.grs.dto.ProviderDto;
 import net.straininfo2.grs.dto.ProviderDtoCollection;
-import net.straininfo2.grs.grsmapping.Provider;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import java.util.Formatter;
 
 @Path("/providers/")
 @Produces(MediaType.TEXT_PLAIN)

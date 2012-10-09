@@ -1,13 +1,12 @@
 package net.straininfo2.grs.dto;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import net.straininfo2.grs.bioproject.mappings.Mapping;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import net.straininfo2.grs.grsmapping.Mapping;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @XmlRootElement(name="mappings")
 public class MappingDtoCollection {

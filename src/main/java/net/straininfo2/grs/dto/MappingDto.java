@@ -1,9 +1,9 @@
 package net.straininfo2.grs.dto;
 
+import net.straininfo2.grs.bioproject.mappings.Mapping;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import net.straininfo2.grs.grsmapping.Mapping;
 
 @XmlRootElement(name="mapping")
 public class MappingDto {
@@ -36,9 +36,9 @@ public class MappingDto {
 		this.url = mapping.getUrl();
 		this.subjectType = mapping.getSubjectType();
 		this.linkName = mapping.getLinkName();
-		this.category = mapping.getCategory();
+		this.category = mapping.getCategory().getName();
 		this.sourceId = mapping.getTargetId();
 		this.providerId = mapping.getProvider().getId();
-		this.projectId = mapping.getGenomeProject().getId();
+		this.projectId = mapping.getBioProject().getProjectId();
 	}
 }

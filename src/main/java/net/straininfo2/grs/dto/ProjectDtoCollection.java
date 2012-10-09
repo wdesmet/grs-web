@@ -1,13 +1,12 @@
 package net.straininfo2.grs.dto;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import net.straininfo2.grs.bioproject.BioProject;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import net.straininfo2.grs.grsmapping.GenomeProject;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @XmlRootElement(name="genome_projects")
 public class ProjectDtoCollection {
@@ -31,9 +30,9 @@ public class ProjectDtoCollection {
 		this.projects = projects;
 	}
 	
-	public static ProjectDtoCollection fromList(Collection<GenomeProject> projects) {
-		List<ProjectDto> dtos = new ArrayList<ProjectDto>(projects.size());
-		for (GenomeProject project : projects) {
+	public static ProjectDtoCollection fromList(Collection<BioProject> projects) {
+		List<ProjectDto> dtos = new ArrayList<>(projects.size());
+		for (BioProject project : projects) {
 			dtos.add(new ProjectDto(project));
 		}
 		return new ProjectDtoCollection(dtos);

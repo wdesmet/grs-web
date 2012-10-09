@@ -3,14 +3,13 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:jee="http://www.springframework.org/schema/jee"
+    xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="
-	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
-	http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd">
-	<!-- <context:load-time-weaver /> -->
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+	http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd">
 	<context:annotation-config />
 	<context:component-scan base-package="net.straininfo2.grs.resource" />
-	<jee:jndi-lookup id="dataSource" jndi-name="jdbc/grsdb" />
 	<bean id="emf"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSource" />
@@ -20,7 +19,7 @@
 	</bean>
 	<bean id="webClient" class="com.sun.jersey.api.client.Client" />
 	<!-- DAO definitions -->
-	<bean id="genomeProjectService" class="net.straininfo2.grs.dao.GenomeProjectService" />
+	<bean id="bioProjectService" class="net.straininfo2.grs.dao.BioProjectService" />
 	<bean id="mappingService" class="net.straininfo2.grs.dao.MappingService" />
 	<bean id ="providerService" class="net.straininfo2.grs.dao.ProviderService" />
 	<bean id="megxGenomeService" class="net.straininfo2.grs.dao.MegxGenomeService">
@@ -30,4 +29,20 @@
 			</bean>
 		</constructor-arg>
 	</bean>
+    <bean id="straininfoService" class="net.straininfo2.grs.dao.StraininfoService">
+        <property name="straininfo">
+            <bean class="com.sun.jersey.api.client.WebResource" factory-bean="webClient" factory-method="resource">
+                <constructor-arg value="http://www.straininfo.net/exports/exportCulture.action" />
+            </bean>
+        </property>
+    </bean>
+    <beans profile="!dev">
+        <jee:jndi-lookup id="dataSource" jndi-name="jdbc/grsdb" />
+    </beans>
+    <beans profile="dev">
+        <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+            <property name="url" value="jdbc:h2:grsdb2" />
+            <property name="username" value="grs" />
+        </bean>
+    </beans>
 </beans>

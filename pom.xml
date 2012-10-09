@@ -4,14 +4,14 @@
 	<groupId>net.straininfo2</groupId>
 	<artifactId>grs</artifactId>
 	<packaging>war</packaging>
-	<version>0.0.3</version>
+	<version>0.0.4-SNAPSHOT</version>
 	<name>Genomic Rosetta Stone</name>
 	<url>http://grs.straininfo.net</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<org.springframework.version>3.0.3.RELEASE</org.springframework.version>
-		<org.hibernate.version>3.5.3-Final</org.hibernate.version>
+		<org.springframework.version>3.2.2.RELEASE</org.springframework.version>
+		<org.hibernate.version>4.2.0.Final</org.hibernate.version>
 		<jersey.version>1.5</jersey.version>
 	</properties>
 
@@ -41,6 +41,11 @@
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-core</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-server</artifactId>
@@ -67,6 +72,12 @@
 			<artifactId>jersey-client</artifactId>
 			<version>${jersey.version}</version>
 		</dependency>
+        <!-- Filter to enable CORS -->
+        <dependency>
+            <groupId>com.thetransactioncompany</groupId>
+            <artifactId>cors-filter</artifactId>
+            <version>1.5.1</version>
+        </dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -87,13 +98,13 @@
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>0.9.21</version>
+			<version>1.0.6</version>
 		</dependency>
 		<dependency>
 			<!-- Include a commons-logging bridge for spring -->
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
-			<version>1.6.0</version>
+			<version>1.6.6</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -102,20 +113,9 @@
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator</artifactId>
-			<version>4.1.0.Final</version>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
 			<version>${org.hibernate.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-annotations</artifactId>
-			<version>${org.hibernate.version}</version>
-		</dependency>
-
 		<!-- URL rewriting, zie http://code.google.com/p/urlrewritefilter/ -->
 		<dependency>
 			<groupId>org.tuckey</groupId>
@@ -134,6 +134,8 @@
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
 		</dependency>
+
+
 	</dependencies>
 
 	<build>
@@ -141,16 +143,38 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
+				<version>3.1</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.7</source>
+					<target>1.7</target>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
-				<version>7.1.6.v20100715</version>
+				<version>7.6.10.v20130312</version>
+                <configuration>
+                    <scanIntervalSeconds>3</scanIntervalSeconds>
+                    <stopPort>10000</stopPort>
+                    <stopKey>stop</stopKey>
+                    <systemProperties>
+                        <systemProperty>
+                            <name>jetty.port</name>
+                            <value>8000</value>
+                        </systemProperty>
+                        <systemProperty>
+                            <name>spring.profiles.active</name>
+                            <value>dev</value>
+                        </systemProperty>
+                    </systemProperties>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.h2database</groupId>
+                        <artifactId>h2</artifactId>
+                        <version>1.3.170</version>
+                    </dependency>
+                </dependencies>
 			</plugin>
 		</plugins>
 	</build>
