@@ -6,27 +6,27 @@ import javax.persistence.*;
 public class Organism {
 
     private long id;
-    
+
     private String organismName;
-    
+
     private String label;
-    
+
     private String strain;
-    
+
     private String isolateName;
-    
+
     private String breed;
-    
+
     private String cultivar;
-    
+
     private String supergroup;
 
     private Integer taxID;
 
     private Integer species;
-    
+
     private String organization;
-    
+
     private String reproduction;
 
     private Long genomeSize;
@@ -54,7 +54,7 @@ public class Organism {
     }
 
     //private TypeOrganism.BiologicalProperties biologicalProperties;
-    
+
     // TODO: Replicons not mapped yet.
 
     public String getOrganismName() {

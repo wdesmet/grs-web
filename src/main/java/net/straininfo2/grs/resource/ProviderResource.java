@@ -20,75 +20,75 @@ import java.util.Formatter;
 @Scope("request")
 public class ProviderResource {
 
-	@Autowired
-	ProviderService providerService;
+    @Autowired
+    ProviderService providerService;
 
-	private final static String HEADER = "# id\tname\tabbr\turl\n";
-	
-	private void formatTextProvider(Formatter formatter, ProviderDto provider) {
-		formatter.format("%d\t%s\t%s\t%s\n", provider.id,
-				provider.name, provider.abbr, provider.url);
-	}
-	
-	@GET
-	public String getProviders() {
-		StringBuilder resp = new StringBuilder(HEADER);
-		Formatter formatter = new Formatter(resp);
-		for (ProviderDto provider : providerService.allProviders().getProviders()) {
-			formatTextProvider(formatter, provider);
-		}
-		return resp.deleteCharAt(resp.length() - 1).toString();
-	}
-	
-	@GET
-	@Produces({MediaType.APPLICATION_XML, MediaType.TEXT_XML, MediaType.APPLICATION_JSON})
-	public ProviderDtoCollection getStructuredProviders() {
-		return providerService.allProviders();
-	}
-	
-	private Provider findProvider(long id) {
-		Provider provider = providerService.findProvider(id);
-		if (provider == null) {
-			throw new NotFoundException("Provider with id " + id + " not found.");
-		}
-		else {
-			return provider;
-		}
-	}
-	
-	@Path("{id}")
-	@GET
-	@Produces({MediaType.APPLICATION_XML, MediaType.TEXT_XML, MediaType.APPLICATION_JSON})
-	public ProviderDto getProvider(@PathParam("id") long id) {
-		return new ProviderDto(findProvider(id));
-	}
-	
-	
-	
-	@GET
-	@Path("{id}")
-	public String getProviderText(@PathParam("id") long id) {
-		ProviderDto provider = new ProviderDto(findProvider(id));
-		StringBuilder sb = new StringBuilder(HEADER);
-		Formatter formatter = new Formatter(sb);
-		formatTextProvider(formatter, provider);
-		return sb.toString();
-	}
-	
-	private static class NotFoundException extends WebApplicationException {
-		
-		private static final long serialVersionUID = 1L;
-		
-		private final Response response;
-		
-		public NotFoundException(String message) {
-			super();
-			this.response = Response.status(Status.NOT_FOUND).entity(message).type(MediaType.TEXT_PLAIN).build(); 
-		}
-		
-		@Override
-		public Response getResponse() {
-			return response;
-		}
-	}
+    private final static String HEADER = "# id\tname\tabbr\turl\n";
+
+    private void formatTextProvider(Formatter formatter, ProviderDto provider) {
+        formatter.format("%d\t%s\t%s\t%s\n", provider.id,
+                provider.name, provider.abbr, provider.url);
+    }
+
+    @GET
+    public String getProviders() {
+        StringBuilder resp = new StringBuilder(HEADER);
+        Formatter formatter = new Formatter(resp);
+        for (ProviderDto provider : providerService.allProviders().getProviders()) {
+            formatTextProvider(formatter, provider);
+        }
+        return resp.deleteCharAt(resp.length() - 1).toString();
+    }
+
+    @GET
+    @Produces({MediaType.APPLICATION_XML, MediaType.TEXT_XML, MediaType.APPLICATION_JSON})
+    public ProviderDtoCollection getStructuredProviders() {
+        return providerService.allProviders();
+    }
+
+    private Provider findProvider(long id) {
+        Provider provider = providerService.findProvider(id);
+        if (provider == null) {
+            throw new NotFoundException("Provider with id " + id + " not found.");
+        }
+        else {
+            return provider;
+        }
+    }
+
+    @Path("{id}")
+    @GET
+    @Produces({MediaType.APPLICATION_XML, MediaType.TEXT_XML, MediaType.APPLICATION_JSON})
+    public ProviderDto getProvider(@PathParam("id") long id) {
+        return new ProviderDto(findProvider(id));
+    }
+
+
+
+    @GET
+    @Path("{id}")
+    public String getProviderText(@PathParam("id") long id) {
+        ProviderDto provider = new ProviderDto(findProvider(id));
+        StringBuilder sb = new StringBuilder(HEADER);
+        Formatter formatter = new Formatter(sb);
+        formatTextProvider(formatter, provider);
+        return sb.toString();
+    }
+
+    private static class NotFoundException extends WebApplicationException {
+
+        private static final long serialVersionUID = 1L;
+
+        private final Response response;
+
+        public NotFoundException(String message) {
+            super();
+            this.response = Response.status(Status.NOT_FOUND).entity(message).type(MediaType.TEXT_PLAIN).build();
+        }
+
+        @Override
+        public Response getResponse() {
+            return response;
+        }
+    }
 }

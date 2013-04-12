@@ -16,9 +16,9 @@ public class OrganismMorphology {
     private Boolean enveloped;
 
     private Set<Shape> shapes;
-    
+
     private Boolean endospores;
-    
+
     private Boolean motility;
 
     public enum Gram {

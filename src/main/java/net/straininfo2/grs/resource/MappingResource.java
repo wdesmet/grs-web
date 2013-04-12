@@ -32,11 +32,11 @@ public class MappingResource {
 
     private final static String STATIC_HEADER = "genome_project_id\tlink_name\turl";
 
-	@Autowired
-	MappingService mappingService;
-	
-	@GET
-	public Response allMappings() {
+    @Autowired
+    MappingService mappingService;
+
+    @GET
+    public Response allMappings() {
         logger.debug("Received a request for all mappings");
         Collection<Mapping> mappings = mappingService.allMappings();
         if (mappings == null || mappings.size() == 0) {
@@ -45,77 +45,77 @@ public class MappingResource {
         else {
             return formatMappings(mappings, FieldDescription.SOURCE, FieldDescription.TARGET_ID);
         }
-	}
-	
-	@GET
-	@Produces({MediaType.APPLICATION_XML, MediaType.TEXT_XML, MediaType.APPLICATION_JSON})
-	public MappingDtoCollection allStructuredMappings() {
-		logger.debug("Received a request for all mappings as XML/JSON");
-		return MappingDtoCollection.fromList(mappingService.allMappings());
-	}
-	
-	@GET
-	@Path("{source}")
-	public Response getMappingsFor(@PathParam("source")String source) {
+    }
+
+    @GET
+    @Produces({MediaType.APPLICATION_XML, MediaType.TEXT_XML, MediaType.APPLICATION_JSON})
+    public MappingDtoCollection allStructuredMappings() {
+        logger.debug("Received a request for all mappings as XML/JSON");
+        return MappingDtoCollection.fromList(mappingService.allMappings());
+    }
+
+    @GET
+    @Path("{source}")
+    public Response getMappingsFor(@PathParam("source")String source) {
         logger.debug("Received a request for source {}", source);
-		List<Mapping> mappings = mappingService.mappingsFor(source);
+        List<Mapping> mappings = mappingService.mappingsFor(source);
         if (mappings == null || mappings.size() == 0) {
             return emptyResponse(source, null);
         }
         else {
             return formatMappings(mappings, FieldDescription.TARGET_ID);
         }
-	}
-	
-	@GET
-	@Path("{source}")
-	@Produces({MediaType.APPLICATION_XML, MediaType.TEXT_XML, MediaType.APPLICATION_JSON})
-	public Response getStructuredMappingsFor(@PathParam("source")String source) {
-		logger.debug("Received a request for source {} as XML/JSON", source);
-		List<Mapping> mappings = mappingService.mappingsFor(source);
-		if (mappings == null || mappings.size() == 0) {
-			return emptyResponse(source, null);
-		}
-		else {
-			return Response.ok(MappingDtoCollection.fromList(mappings)).build();
-		}
-	}
-	
-	@GET
-	@Path("{source}/{sourceId}")
-	public Response getMapping(@PathParam("source")String source,
-			@PathParam("sourceId")String sourceId) {
+    }
+
+    @GET
+    @Path("{source}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.TEXT_XML, MediaType.APPLICATION_JSON})
+    public Response getStructuredMappingsFor(@PathParam("source")String source) {
+        logger.debug("Received a request for source {} as XML/JSON", source);
+        List<Mapping> mappings = mappingService.mappingsFor(source);
+        if (mappings == null || mappings.size() == 0) {
+            return emptyResponse(source, null);
+        }
+        else {
+            return Response.ok(MappingDtoCollection.fromList(mappings)).build();
+        }
+    }
+
+    @GET
+    @Path("{source}/{sourceId}")
+    public Response getMapping(@PathParam("source")String source,
+            @PathParam("sourceId")String sourceId) {
         logger.debug("Received a request for source {} and id {}", source, sourceId);
-		List<Mapping> mappings = mappingService.mappingsFor(source, sourceId);
+        List<Mapping> mappings = mappingService.mappingsFor(source, sourceId);
         if (mappings == null || mappings.size() == 0) {
             return emptyResponse(source, sourceId);
         }
         else {
-		    return formatMappings(mappings);
+            return formatMappings(mappings);
         }
-	}
-	
-	@GET
-	@Path("{source}/{sourceId}")
-	@Produces({MediaType.APPLICATION_XML, MediaType.TEXT_XML, MediaType.APPLICATION_JSON})
-	public Response getStructuredMapping(@PathParam("source")String source,
-			@PathParam("sourceId")String sourceId) {
-		logger.debug("Received a request for source {} and id {} as XML/JSON", source, sourceId);
-		List<Mapping> mappings = mappingService.mappingsFor(source, sourceId);
-		if (mappings == null || mappings.size() == 0) {
-			return emptyResponse(source, sourceId);
-		}
-		else {
-			return Response.ok(MappingDtoCollection.fromList(mappings)).build();
-		}
-	}
+    }
+
+    @GET
+    @Path("{source}/{sourceId}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.TEXT_XML, MediaType.APPLICATION_JSON})
+    public Response getStructuredMapping(@PathParam("source")String source,
+            @PathParam("sourceId")String sourceId) {
+        logger.debug("Received a request for source {} and id {} as XML/JSON", source, sourceId);
+        List<Mapping> mappings = mappingService.mappingsFor(source, sourceId);
+        if (mappings == null || mappings.size() == 0) {
+            return emptyResponse(source, sourceId);
+        }
+        else {
+            return Response.ok(MappingDtoCollection.fromList(mappings)).build();
+        }
+    }
 
     public static enum FieldDescription {
         SOURCE("source (abbr)"),
         TARGET_ID("source_id");
 
         private final String name;
-        
+
         String extract(Mapping mapping) {
             switch (this) {
                 case SOURCE:
@@ -126,14 +126,14 @@ public class MappingResource {
                     return "";
             }
         }
-        
+
         FieldDescription(String name) {
-        	this.name = name;
+            this.name = name;
         }
-        
+
         @Override
         public String toString() {
-        	return name;
+            return name;
         }
     }
 
@@ -148,13 +148,13 @@ public class MappingResource {
         response += ".";
         return Response.status(Status.NOT_FOUND).type(MediaType.TEXT_PLAIN).entity(response).build();
     }
-	
+
     public static Response formatMappings(Collection<Mapping> mappings, FieldDescription... descriptions) {
         StringBuilder sb = new StringBuilder(16 * mappings.size());
         // build the header first
         sb.append("# ");
         for (FieldDescription descr : descriptions) {
-        	sb.append(descr.toString()).append('\t');
+            sb.append(descr.toString()).append('\t');
         }
         sb.append(STATIC_HEADER).append('\n');
         Formatter formatter = new Formatter(sb);
@@ -162,24 +162,24 @@ public class MappingResource {
             for (FieldDescription descr : descriptions) {
                 formatter.format("%s\t", descr.extract(mapping));
             }
-		    formatter.format("%d\t%s\t%s\n", 
-				mapping.getBioProject().getProjectId(),
-				mapping.getLinkName() == null ? "" : mapping.getLinkName(), 
-						mapping.getUrl());
+            formatter.format("%d\t%s\t%s\n", 
+                mapping.getBioProject().getProjectId(),
+                mapping.getLinkName() == null ? "" : mapping.getLinkName(), 
+                        mapping.getUrl());
         }
         if (sb.length() > 0) {
             sb.deleteCharAt(sb.length() - 1); // snip trailing \n
         }
         return Response.ok(sb.toString()).build();
     }
-	
-	private static String encode(String in) {
-		try {
-			return URLEncoder.encode(in, "utf-8").toString();
-		} catch (UnsupportedEncodingException e) {
-			// whatever
-		}
-		return "";
-	}
-	
+
+    private static String encode(String in) {
+        try {
+            return URLEncoder.encode(in, "utf-8").toString();
+        } catch (UnsupportedEncodingException e) {
+            // whatever
+        }
+        return "";
+    }
+
 }

@@ -25,23 +25,23 @@ import java.util.*;
 @Path("/comparisons/")
 @Produces(MediaType.TEXT_HTML)
 public class ComparisonResource {
-	
-	private final static Logger logger = LoggerFactory.getLogger(ComparisonResource.class);
-	
-	@Autowired
-	MegxGenomeService megxService;
-	
-	@Autowired
+
+    private final static Logger logger = LoggerFactory.getLogger(ComparisonResource.class);
+
+    @Autowired
+    MegxGenomeService megxService;
+
+    @Autowired
     BioProjectService genomeService;
 
     @Autowired
     StraininfoService straininfoService;
-	
-	@GET
-	public Viewable getMain() {
-		logger.debug("Received a GET for main index");
-		return new Viewable("index", "blah");
-	}
+
+    @GET
+    public Viewable getMain() {
+        logger.debug("Received a GET for main index");
+        return new Viewable("index", "blah");
+    }
 
     @GET
     @Path("/search")
@@ -49,33 +49,33 @@ public class ComparisonResource {
     public Response testForm(@QueryParam("id") long id) {
         return Response.temporaryRedirect(UriBuilder.fromResource(ComparisonResource.class).path(""+id).build()).build();
     }
-	
-	@GET
-	@Path("/{gpid}")
-	public Viewable getGenomeComparison(@PathParam("gpid") long genomeId) {
-		logger.debug("Received get for genome {}", genomeId);
+
+    @GET
+    @Path("/{gpid}")
+    public Viewable getGenomeComparison(@PathParam("gpid") long genomeId) {
+        logger.debug("Received get for genome {}", genomeId);
         BioProject project = genomeService.findBioProject(genomeId);
         if (project == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-		try {
-			final Map<String, String> megxData = megxService.getMegxJson(genomeId);
-			final Map<String, String> ncbiData = genomeService.getAssociatedInformation(genomeService.findBioProject(genomeId));
+        try {
+            final Map<String, String> megxData = megxService.getMegxJson(genomeId);
+            final Map<String, String> ncbiData = genomeService.getAssociatedInformation(genomeService.findBioProject(genomeId));
             final Map<String, String> straininfoData = straininfoService.getStrainInfoCultureData(genomeId);
-			List<Map<String, String>> data = new LinkedList<Map<String, String>>();
-			data.add(megxData);
-			data.add(ncbiData);
+            List<Map<String, String>> data = new LinkedList<Map<String, String>>();
+            data.add(megxData);
+            data.add(ncbiData);
             data.add(straininfoData);
             MashupLogic logic = new MashupLogic(Arrays.asList("Megx", "NCBI", "StrainInfo"), data);
             List<Object> results = new ArrayList<>();
             results.add(logic);
             results.add(Collections.singletonMap("id", ""+genomeId));
-			return new Viewable("comparison", results);
-		} catch (JSONException e) {
-			// unrecoverable, give some feedback to user
-			throw new WebApplicationException(e);
-		}
-	}
+            return new Viewable("comparison", results);
+        } catch (JSONException e) {
+            // unrecoverable, give some feedback to user
+            throw new WebApplicationException(e);
+        }
+    }
 
     @GET
     @Path("/{gpid}")

@@ -12,76 +12,76 @@ import java.util.*;
  */
 public class ExtensionAcceptFilter implements Filter {
 
-	private static class RequestWrapper extends HttpServletRequestWrapper {
+    private static class RequestWrapper extends HttpServletRequestWrapper {
 
-		private String accept = null;
-		
-		final static Map<String, String> acceptStrings = new HashMap<String, String>();
-		
-		static {
-			acceptStrings.put("xml", "application/xml");
-			acceptStrings.put("txt", "text/plain");
-			acceptStrings.put("json", "application/json");
-		}
-		
-		public RequestWrapper(HttpServletRequest request) {
-			super(request);
-			Object ext = request.getAttribute("net.straininfo2.ext"); 
-			if (ext != null && acceptStrings.containsKey(ext)) {
-				this.accept = acceptStrings.get(ext);
-			}
-		}
-	
-		@Override
-		public String getHeader(String name) {
-			if ("Accept".equalsIgnoreCase(name) && this.accept != null) {
-				return this.accept;
-			}
-			else {
-				return super.getHeader(name);
-			}
-		}
-		
-		@Override
-		public Enumeration<String> getHeaders(String name) {
-			if ("Accept".equalsIgnoreCase(name) && this.accept != null) {
-				return new Vector<String>(Collections.singleton(this.accept)).elements();
-			}
-			else {
-				return super.getHeaders(name);
-			}
-		}
-		
-		@Override
-		public Enumeration<String> getHeaderNames() {
-			Enumeration<String> headerNames = super.getHeaderNames();
-			Vector<String> headers = new Vector<String>();
-			boolean hasAccept = false;
-			while (headerNames.hasMoreElements()) {
-				String name = headerNames.nextElement();
-				if ("accept".equalsIgnoreCase(name)) {
-					hasAccept = true;
-				}
-				headers.add(name);
-			}
-			if (!hasAccept) {
-				headers.add("Accept");
-			}
-			return headers.elements();
-		}
-	}
-	@Override
-	public void destroy() {
-	}
+        private String accept = null;
 
-	@Override
-	public void doFilter(ServletRequest request, ServletResponse response,
-			FilterChain chain) throws IOException, ServletException {
-		chain.doFilter(new RequestWrapper((HttpServletRequest)request), response);
-	}
+        final static Map<String, String> acceptStrings = new HashMap<String, String>();
 
-	@Override
-	public void init(FilterConfig config) throws ServletException {
-	}
-	
+        static {
+            acceptStrings.put("xml", "application/xml");
+            acceptStrings.put("txt", "text/plain");
+            acceptStrings.put("json", "application/json");
+        }
+
+        public RequestWrapper(HttpServletRequest request) {
+            super(request);
+            Object ext = request.getAttribute("net.straininfo2.ext");
+            if (ext != null && acceptStrings.containsKey(ext)) {
+                this.accept = acceptStrings.get(ext);
+            }
+        }
+
+        @Override
+        public String getHeader(String name) {
+            if ("Accept".equalsIgnoreCase(name) && this.accept != null) {
+                return this.accept;
+            }
+            else {
+                return super.getHeader(name);
+            }
+        }
+
+        @Override
+        public Enumeration<String> getHeaders(String name) {
+            if ("Accept".equalsIgnoreCase(name) && this.accept != null) {
+                return new Vector<String>(Collections.singleton(this.accept)).elements();
+            }
+            else {
+                return super.getHeaders(name);
+            }
+        }
+
+        @Override
+        public Enumeration<String> getHeaderNames() {
+            Enumeration<String> headerNames = super.getHeaderNames();
+            Vector<String> headers = new Vector<String>();
+            boolean hasAccept = false;
+            while (headerNames.hasMoreElements()) {
+                String name = headerNames.nextElement();
+                if ("accept".equalsIgnoreCase(name)) {
+                    hasAccept = true;
+                }
+                headers.add(name);
+            }
+            if (!hasAccept) {
+                headers.add("Accept");
+            }
+            return headers.elements();
+        }
+    }
+    @Override
+    public void destroy() {
+    }
+
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response,
+            FilterChain chain) throws IOException, ServletException {
+        chain.doFilter(new RequestWrapper((HttpServletRequest)request), response);
+    }
+
+    @Override
+    public void init(FilterConfig config) throws ServletException {
+    }
+
 }

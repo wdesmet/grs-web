@@ -22,7 +22,7 @@ public class OrganismPhenotype {
             return this.name().substring(1);
         }
     }
-    
+
     public enum TrophicLevel {
         eAutotroph,
         eHeterotroph,
@@ -35,9 +35,9 @@ public class OrganismPhenotype {
     }
 
     private long id;
-    
+
     private BioticRelationship bioticRelationship;
-    
+
     private TrophicLevel trophicLevel;
 
     private String disease;

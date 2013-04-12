@@ -21,53 +21,53 @@ import java.util.Map;
  */
 public class MegxGenomeService {
 
-	private WebResource megx; // WebResource pointing to megx endpoint
-	
-	private final static Logger logger = LoggerFactory.getLogger(MegxGenomeService.class);
+    private WebResource megx; // WebResource pointing to megx endpoint
 
-	public MegxGenomeService() {
+    private final static Logger logger = LoggerFactory.getLogger(MegxGenomeService.class);
 
-	}
+    public MegxGenomeService() {
 
-	public MegxGenomeService(WebResource megx) {
-		this.megx = megx;
-	}
+    }
 
-	public void setMegx(WebResource megx) {
-		this.megx = megx;
-	}
+    public MegxGenomeService(WebResource megx) {
+        this.megx = megx;
+    }
 
-	public WebResource getMegx() {
-		return megx;
-	}
+    public void setMegx(WebResource megx) {
+        this.megx = megx;
+    }
 
-	public String getMegxPlain(long id) {
-		return megx.queryParam("id", "gpid:" + id).accept("text/plain").get(
-				String.class);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public Map<String, String> getMegxJson(long id) throws JSONException {
+    public WebResource getMegx() {
+        return megx;
+    }
+
+    public String getMegxPlain(long id) {
+        return megx.queryParam("id", "gpid:" + id).accept("text/plain").get(
+                String.class);
+    }
+
+    @SuppressWarnings("unchecked")
+    public Map<String, String> getMegxJson(long id) throws JSONException {
         try {
-		JSONObject obj = megx.queryParam("id", "gpid:" + id).accept(
-				MediaType.APPLICATION_JSON_TYPE).get(
-						JSONObject.class).getJSONObject("genome");
-		Iterator<String> iter = (Iterator<String>)obj.keys();
-		Map<String, String> res = new HashMap<String, String>();
-		while (iter.hasNext()) {
-			String key = iter.next();
-			if (obj.get(key) != JSONObject.NULL) {
-				res.put(key, obj.getString(key));
-			}
-			else {
-				logger.trace("Discarded NULL object for key {}", key);
-			}
-		}
-		return res;
+        JSONObject obj = megx.queryParam("id", "gpid:" + id).accept(
+                MediaType.APPLICATION_JSON_TYPE).get(
+                        JSONObject.class).getJSONObject("genome");
+        Iterator<String> iter = (Iterator<String>)obj.keys();
+        Map<String, String> res = new HashMap<String, String>();
+        while (iter.hasNext()) {
+            String key = iter.next();
+            if (obj.get(key) != JSONObject.NULL) {
+                res.put(key, obj.getString(key));
+            }
+            else {
+                logger.trace("Discarded NULL object for key {}", key);
+            }
+        }
+        return res;
         } catch (ClientHandlerException e) {
             // thrown when the result returned is not what expected (example: a html error page)
             logger.warn("Parsing result from MegX failed", e);
             return Collections.emptyMap();
         }
-	}
+    }
 }

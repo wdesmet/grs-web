@@ -6,13 +6,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ComparisonData {
 
     private ConcurrentHashMap<String, String> megxData;
-    
+
     private ConcurrentHashMap<String, String> strainInfoData;
-    
+
     private ConcurrentHashMap<String, String> ncbiData;
 
     private final static String EMPTY_VALUE = "null";
-    
+
     public ComparisonData() {
         this.megxData = new ConcurrentHashMap<String, String>();
         this.strainInfoData = new ConcurrentHashMap<String, String>();

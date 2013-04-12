@@ -19,7 +19,7 @@ be in the layout defined by [gpdler] [3]. If you already have the embedded
 database created by gpdler, there is a shortcut to get up and running, namely
 drop the file (default "grsdb2.h2.db") in the grs-web directory and run:
 
-	$ mvn jetty:run
+    $ mvn jetty:run
 
 When deploying in a web container or application server, provide the JNDI name
 by configuring a database instance in your container. For instance, for Tomcat

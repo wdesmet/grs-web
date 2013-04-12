@@ -25,7 +25,7 @@ public class OrganismEnvironment {
             return descr;
         }
     }
-    
+
     public enum OxygenReq {
         eUnknown,
         eAerobic,
@@ -52,7 +52,7 @@ public class OrganismEnvironment {
             return this.name().substring(1);
         }
     }
-    
+
     public enum Habitat {
         eUnknown,
         eHostAssociated,
@@ -68,15 +68,15 @@ public class OrganismEnvironment {
     }
 
     private long id;
-    
+
     private Salinity salinity;
-    
+
     private OxygenReq oxygenReq;
-    
+
     private String optimumTemperature;
-    
+
     private TemperatureRange temperatureRange;
-    
+
     private Habitat habitat;
 
     @Id

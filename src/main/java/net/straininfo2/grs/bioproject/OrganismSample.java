@@ -26,9 +26,9 @@ public class OrganismSample {
     }
 
     private CultureType cultureSampleInfo;
-    
+
     private Boolean isIsolatedCell;
-    
+
     private Boolean isTissueSample;
 
     @Id
