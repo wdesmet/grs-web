@@ -1,17 +1,17 @@
 package net.straininfo2.grs.dao;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import javax.ws.rs.core.MediaType;
-
+import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.WebResource;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sun.jersey.api.client.WebResource;
+import javax.ws.rs.core.MediaType;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Service that provides external access to megx data for genomes.
@@ -48,6 +48,7 @@ public class MegxGenomeService {
 	
 	@SuppressWarnings("unchecked")
 	public Map<String, String> getMegxJson(long id) throws JSONException {
+        try {
 		JSONObject obj = megx.queryParam("id", "gpid:" + id).accept(
 				MediaType.APPLICATION_JSON_TYPE).get(
 						JSONObject.class).getJSONObject("genome");
@@ -63,5 +64,10 @@ public class MegxGenomeService {
 			}
 		}
 		return res;
+        } catch (ClientHandlerException e) {
+            // thrown when the result returned is not what expected (example: a html error page)
+            logger.warn("Parsing result from MegX failed", e);
+            return Collections.emptyMap();
+        }
 	}
 }

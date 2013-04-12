@@ -1,9 +1,9 @@
 package net.straininfo2.grs.dto;
 
+import net.straininfo2.grs.bioproject.mappings.Provider;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import net.straininfo2.grs.grsmapping.Provider;
 
 @XmlRootElement(name="provider")
 public class ProviderDto {

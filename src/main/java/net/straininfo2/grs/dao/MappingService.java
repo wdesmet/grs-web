@@ -1,12 +1,11 @@
 package net.straininfo2.grs.dao;
 
-import java.util.Collection;
-import java.util.List;
+import net.straininfo2.grs.bioproject.mappings.Mapping;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import net.straininfo2.grs.grsmapping.Mapping;
+import java.util.Collection;
+import java.util.List;
 
 public class MappingService {
 	
@@ -23,7 +22,7 @@ public class MappingService {
 	
 	@SuppressWarnings("unchecked")
 	public Collection<Mapping> allMappings() {
-		return (List<Mapping>)getEntityManager().createQuery("from Mapping m join fetch m.provider join fetch m.genomeProject").getResultList();
+		return (List<Mapping>)getEntityManager().createQuery("from Mapping m join fetch m.provider join fetch m.bioProject").getResultList();
 	}
 	
 	/**
@@ -35,7 +34,7 @@ public class MappingService {
 	@SuppressWarnings("unchecked")
 	public List<Mapping> mappingsFor(String provider) {
 		return (List<Mapping>)getEntityManager().createQuery(
-				"from Mapping m join fetch m.provider join fetch m.genomeProject " +
+				"from Mapping m join fetch m.provider join fetch m.bioProject " +
 				"where lower(m.provider.abbr)=:abbr"
 				).setParameter("abbr", provider.toLowerCase()).getResultList();
 	}
@@ -51,10 +50,11 @@ public class MappingService {
 	@SuppressWarnings("unchecked")
 	public List<Mapping> mappingsFor(String provider, String id) {
 		return (List<Mapping>)getEntityManager().createQuery(
-				"from Mapping m join fetch m.provider join fetch m.genomeProject " +
-				"where m.genomeProject in (select i.genomeProject from Mapping i where " +
+				"from Mapping m join fetch m.provider join fetch m.bioProject " +
+				"where m.bioProject in (select i.bioProject from Mapping i where " +
                         "lower(i.provider.abbr)=:provider and i.targetId = :id)"
 				).setParameter("provider", provider.toLowerCase()
 						).setParameter("id", id).getResultList();
 	}
+
 }

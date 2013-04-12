@@ -1,9 +1,9 @@
 package net.straininfo2.grs.dto;
 
+import net.straininfo2.grs.bioproject.BioProject;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import net.straininfo2.grs.grsmapping.GenomeProject;
 
 @XmlRootElement(name="genome_project")
 public class ProjectDto {
@@ -22,8 +22,8 @@ public class ProjectDto {
 		this.id = id;
 	}
 	
-	public ProjectDto(GenomeProject project) {
-		this.id = project.getId();
+	public ProjectDto(BioProject project) {
+		this.id = project.getProjectId();
 		this.mappings = MappingDtoCollection.fromList(project.getMappings());
 	}
 	

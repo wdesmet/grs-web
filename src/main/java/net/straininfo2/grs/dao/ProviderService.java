@@ -1,14 +1,13 @@
 package net.straininfo2.grs.dao;
 
-import java.util.ArrayList;
-import java.util.List;
+import net.straininfo2.grs.bioproject.mappings.Provider;
+import net.straininfo2.grs.dto.ProviderDto;
+import net.straininfo2.grs.dto.ProviderDtoCollection;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import net.straininfo2.grs.dto.ProviderDto;
-import net.straininfo2.grs.dto.ProviderDtoCollection;
-import net.straininfo2.grs.grsmapping.Provider;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProviderService {
 

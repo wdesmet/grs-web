@@ -1,10 +1,13 @@
 package net.straininfo2.grs.resource;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Collection;
-import java.util.Formatter;
-import java.util.List;
+import net.straininfo2.grs.bioproject.mappings.Mapping;
+import net.straininfo2.grs.dao.MappingService;
+import net.straininfo2.grs.dto.MappingDtoCollection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -13,17 +16,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
-import net.straininfo2.grs.dao.MappingService;
-import net.straininfo2.grs.dto.MappingDtoCollection;
-import net.straininfo2.grs.grsmapping.Mapping;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Collection;
+import java.util.Formatter;
+import java.util.List;
 
 @Component
 @Scope("request")
@@ -166,7 +163,7 @@ public class MappingResource {
                 formatter.format("%s\t", descr.extract(mapping));
             }
 		    formatter.format("%d\t%s\t%s\n", 
-				mapping.getGenomeProject().getId(), 
+				mapping.getBioProject().getProjectId(),
 				mapping.getLinkName() == null ? "" : mapping.getLinkName(), 
 						mapping.getUrl());
         }
