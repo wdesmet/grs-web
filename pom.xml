@@ -4,7 +4,7 @@
 	<groupId>net.straininfo2</groupId>
 	<artifactId>grs</artifactId>
 	<packaging>war</packaging>
-	<version>0.0.3</version>
+	<version>0.0.4-SNAPSHOT</version>
 	<name>Genomic Rosetta Stone</name>
 	<url>http://grs.straininfo.net</url>
 
