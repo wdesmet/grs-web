@@ -1,5 +1,6 @@
 package net.straininfo2.grs.dao;
 
+import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 import net.straininfo2.grs.bioproject.mappings.Mapping;
 import org.codehaus.jettison.json.JSONArray;
@@ -35,32 +36,34 @@ public class StraininfoService {
         Map<String, String> result = new HashMap<String, String>();
         // values for later culture IDs currently overwrite those of previous
         for (int id : cultureIds) {
-            JSONObject obj = straininfo.queryParam("cultureId", "" + id).accept(
-                    MediaType.APPLICATION_JSON_TYPE).get(
-                    JSONObject.class);
-            Iterator<String> it = obj.keys();
-            logger.info("Adding keys from id {}.", id);
-            while (it.hasNext()) {
-                String key = it.next();
-                Object value = obj.get(key);
-                if (obj.get(key) != JSONObject.NULL) {
-                    logger.debug("Adding JSON value from StrainInfo for key {}", key);
-                    if (value instanceof String) {
-                        result.put(key, obj.getString(key));
-                    }
-                    else if (value instanceof JSONArray) {
-                        JSONArray ar = (JSONArray) value;
-                        StringBuilder sb = new StringBuilder();
-                        for (int i = 0; i < ar.length() - 1; i++) {
-                            sb.append(ar.getString(i)).append(',');
+            try {
+                JSONObject obj = straininfo.queryParam("cultureId", "" + id).accept(
+                        MediaType.APPLICATION_JSON_TYPE).get(
+                        JSONObject.class);
+                Iterator<String> it = obj.keys();
+                logger.info("Adding keys from id {}.", id);
+                while (it.hasNext()) {
+                    String key = it.next();
+                    Object value = obj.get(key);
+                    if (obj.get(key) != JSONObject.NULL) {
+                        logger.debug("Adding JSON value from StrainInfo for key {}", key);
+                        if (value instanceof String) {
+                            result.put(key, obj.getString(key));
+                        } else if (value instanceof JSONArray) {
+                            JSONArray ar = (JSONArray) value;
+                            StringBuilder sb = new StringBuilder();
+                            for (int i = 0; i < ar.length() - 1; i++) {
+                                sb.append(ar.getString(i)).append(',');
+                            }
+                            sb.append(ar.getString(ar.length() - 1));
+                            result.put(key, sb.toString());
+                        } else {
+                            throw new RuntimeException("Cannot parse value returned from StrainInfo JSON");
                         }
-                        sb.append(ar.getString(ar.length() - 1));
-                        result.put(key, sb.toString());
-                    }
-                    else {
-                        throw new RuntimeException("Cannot parse value returned from StrainInfo JSON");
                     }
                 }
+            } catch (UniformInterfaceException e) {
+                // HTTP 400 or similar, empty result
             }
         }
         return result;
