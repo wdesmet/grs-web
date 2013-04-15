@@ -4,6 +4,7 @@
     <head>
         <title>Comparison page</title>
         <link rel="stylesheet" href="/style/bootstrap.css"></link>
+        <style type="text/css">td {width: 25%; overflow:auto; }</style>
     </head>
     <body>
         <h1>GRS Provider information on Bioproject ${it[1]["id"]}</h1>
@@ -17,7 +18,7 @@
                 </form>
             </div>
             <div class="row">
-                <table class="table">
+                <table class="table" style="table-layout:fixed;">
                 <tr><th>Label</th><c:forEach var="name" items="${it[0].providerNames}"><th>${name}</th></c:forEach></tr>
 
                 <c:forEach var="key" items="${it[0].labelsMatching}">
