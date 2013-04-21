@@ -213,7 +213,32 @@ public class MashupLogic {
         assert providerData.size() == providerNames.size();
         this.providerNames = providerNames;
         this.providerData = providerData;
+        cleanupData();
         computeMaps();
+    }
+
+    private void cleanupData() {
+        // makes sure everything uses about the same values for terms, otherwise nothing will match
+        Iterator<Map<String, String>> it = providerData.iterator();
+        for (String name : providerNames) {
+            Map<String, String> providerData = it.next();
+            if (name.equalsIgnoreCase("megx")) {
+                for (Map.Entry<String, String> entry : new HashMap<>(providerData).entrySet()) {
+                    if (entry.getValue().equals("infinity") || entry.getValue().equals("-1")) {
+                        providerData.remove(entry.getKey());
+                    }
+                    else if (entry.getValue().equals("t")) {
+                        providerData.put(entry.getKey(), "yes");
+                    }
+                    else if (entry.getValue().equals("f")) {
+                        providerData.put(entry.getKey(), "no");
+                    }
+                    else if (entry.getKey().equals("motility")) {
+                        providerData.put(entry.getKey(), entry.getValue().equalsIgnoreCase("motile") ? "yes" : "no");
+                    }
+                }
+            }
+        }
     }
 
     public void computeMaps() {
