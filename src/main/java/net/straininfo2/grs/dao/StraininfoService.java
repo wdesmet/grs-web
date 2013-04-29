@@ -57,6 +57,8 @@ public class StraininfoService {
                             }
                             sb.append(ar.getString(ar.length() - 1));
                             result.put(key, sb.toString());
+                        } else if (value instanceof Number) {
+                            result.put(key, "" + value);
                         } else {
                             throw new RuntimeException("Cannot parse value returned from StrainInfo JSON");
                         }
