@@ -19,7 +19,7 @@
             </div>
             <div class="row">
                 <table class="table" style="table-layout:fixed;">
-                <tr><th>Label</th><c:forEach var="name" items="${it[0].providerNames}"><th>${name}</th></c:forEach></tr>
+                <tr><th>Label</th><c:forEach var="name" items="${it[0].providerNames}"><th><a href="${it[1][name]}">${name}</a></th></c:forEach></tr>
 
                 <c:forEach var="key" items="${it[0].labelsMatching}">
                 <tr class="success"><td>${key}</td>

@@ -22,18 +22,23 @@ public class StraininfoService {
 
     private static Logger logger = LoggerFactory.getLogger(StraininfoService.class);
 
-    public Map<String, String> getStrainInfoCultureData(long genomeProjectId) throws JSONException {
-        // this basically is just internally doing the same as querying /projects
-        // we should consider adding the ncbi bioproject as a special type of provider as well
+    public List<Integer> findCultureIds(long genomeProjectId) {
         List<Integer> cultureIds = new LinkedList<Integer>();
         for (Mapping mapping : projectService.findFullGenomeProject(genomeProjectId).getMappings()) {
             if (mapping.getProvider().getAbbr().equalsIgnoreCase("straininfo")) {
                 cultureIds.add(Integer.parseInt(mapping.getTargetId()));
             }
         }
+        return cultureIds;
+    }
+
+    public Map<String, String> getStrainInfoCultureData(long genomeProjectId) throws JSONException {
+        // this basically is just internally doing the same as querying /projects
+        // we should consider adding the ncbi bioproject as a special type of provider as well
+        List<Integer> cultureIds = findCultureIds(genomeProjectId);
         logger.info("Found {} culture IDs in StrainInfo for genome project {}", cultureIds.size(), genomeProjectId);
         // TODO: the jackson json library would be preferrable here
-        Map<String, String> result = new HashMap<String, String>();
+        Map<String, String> result = new HashMap<>();
         // values for later culture IDs currently overwrite those of previous
         for (int id : cultureIds) {
             try {

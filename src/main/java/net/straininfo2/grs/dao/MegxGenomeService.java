@@ -42,14 +42,18 @@ public class MegxGenomeService {
     }
 
     public String getMegxPlain(long id) {
-        return megx.queryParam("id", "gpid:" + id).accept("text/plain").get(
+        return constructGenomeprojectQuery(id).accept("text/plain").get(
                 String.class);
+    }
+
+    public WebResource constructGenomeprojectQuery(long id) {
+        return megx.queryParam("id", "gpid:" + id);
     }
 
     @SuppressWarnings("unchecked")
     public Map<String, String> getMegxJson(long id) throws JSONException {
         try {
-        JSONObject obj = megx.queryParam("id", "gpid:" + id).accept(
+        JSONObject obj = constructGenomeprojectQuery(id).accept(
                 MediaType.APPLICATION_JSON_TYPE).get(
                         JSONObject.class).getJSONObject("genome");
         Iterator<String> iter = (Iterator<String>)obj.keys();

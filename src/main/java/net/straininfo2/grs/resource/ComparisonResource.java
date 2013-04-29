@@ -69,7 +69,16 @@ public class ComparisonResource {
             MashupLogic logic = new MashupLogic(Arrays.asList("Megx", "NCBI", "StrainInfo"), data);
             List<Object> results = new ArrayList<>();
             results.add(logic);
-            results.add(Collections.singletonMap("id", ""+genomeId));
+            Map<String, String> displayValues = new HashMap<>();
+            displayValues.put("id", ""+genomeId);
+            displayValues.put("Megx", megxService.constructGenomeprojectQuery(genomeId).toString());
+            displayValues.put("NCBI", "http://www.ncbi.nlm.nih.gov/bioproject/" + genomeId);
+            List<Integer> ids = straininfoService.findCultureIds(genomeId);
+            // usually only one
+            if (ids.size() > 0) {
+                displayValues.put("StrainInfo", "http://www.straininfo.net/strains/" + ids.get(0));
+            }
+            results.add(displayValues);
             return new Viewable("comparison", results);
         } catch (JSONException e) {
             // unrecoverable, give some feedback to user
