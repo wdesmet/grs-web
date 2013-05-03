@@ -1,12 +1,9 @@
 package net.straininfo2.grs.resource;
 
 import com.sun.jersey.api.view.Viewable;
-import net.straininfo2.grs.bioproject.BioProject;
 import net.straininfo2.grs.dao.BioProjectService;
-import net.straininfo2.grs.dao.MegxGenomeService;
-import net.straininfo2.grs.dao.StraininfoService;
+import net.straininfo2.grs.dao.MashupService;
 import net.straininfo2.grs.dto.ComparisonData;
-import net.straininfo2.grs.mashup.MashupLogic;
 import org.codehaus.jettison.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,13 +26,10 @@ public class ComparisonResource {
     private final static Logger logger = LoggerFactory.getLogger(ComparisonResource.class);
 
     @Autowired
-    MegxGenomeService megxService;
-
-    @Autowired
     BioProjectService genomeService;
 
     @Autowired
-    StraininfoService straininfoService;
+    MashupService mashupService;
 
     @GET
     public Viewable getMain() {
@@ -54,35 +48,15 @@ public class ComparisonResource {
     @Path("/{gpid}")
     public Viewable getGenomeComparison(@PathParam("gpid") long genomeId) {
         logger.debug("Received get for genome {}", genomeId);
-        BioProject project = genomeService.findBioProject(genomeId);
-        if (project == null) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
-        }
         try {
-            final Map<String, String> megxData = megxService.getMegxJson(genomeId);
-            final Map<String, String> ncbiData = genomeService.getAssociatedInformation(genomeService.findBioProject(genomeId));
-            final Map<String, String> straininfoData = straininfoService.getStrainInfoCultureData(genomeId);
-            List<Map<String, String>> data = new LinkedList<Map<String, String>>();
-            data.add(megxData);
-            data.add(ncbiData);
-            data.add(straininfoData);
-            MashupLogic logic = new MashupLogic(Arrays.asList("Megx", "NCBI", "StrainInfo"), data);
-            List<Object> results = new ArrayList<>();
-            results.add(logic);
-            Map<String, String> displayValues = new HashMap<>();
-            displayValues.put("id", ""+genomeId);
-            displayValues.put("Megx", megxService.constructGenomeprojectQuery(genomeId).toString());
-            displayValues.put("NCBI", "http://www.ncbi.nlm.nih.gov/bioproject/" + genomeId);
-            List<Integer> ids = straininfoService.findCultureIds(genomeId);
-            // usually only one
-            if (ids.size() > 0) {
-                displayValues.put("StrainInfo", "http://www.straininfo.net/strains/" + ids.get(0));
-            }
-            results.add(displayValues);
+            List<Object> results = mashupService.getCrossrefData(genomeId, this);
             return new Viewable("comparison", results);
         } catch (JSONException e) {
             // unrecoverable, give some feedback to user
             throw new WebApplicationException(e);
+        } catch (IllegalArgumentException e) {
+            // bioproject does not exist
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
     }
 
@@ -90,15 +64,12 @@ public class ComparisonResource {
     @Path("/{gpid}")
     @Produces(MediaType.APPLICATION_JSON)
     public ComparisonData getMachineReadableGenomeComparison(@PathParam("gpid") long genomeId) {
-        ComparisonData data = new ComparisonData();
         try {
-            data.setMegx(megxService.getMegxJson(genomeId));
-            // cheating a little bit by giving NCBI a provider ID
-            data.setNcbi(genomeService.getAssociatedInformation(genomeService.findBioProject(genomeId)));
-            data.setStrainInfo(straininfoService.getStrainInfoCultureData(genomeId));
+            ComparisonData data = mashupService.getComparisonData(genomeId, this);
+            return data;
         } catch (JSONException e) {
             throw new WebApplicationException(e);
         }
-        return data;
     }
+
 }
